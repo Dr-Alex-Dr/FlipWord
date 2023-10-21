@@ -75,7 +75,6 @@ export class User {
         try {
             let sateSubscription  = await this.db.connect('SELECT * FROM User WHERE `telegram_id` = ?', [telegramId])
 
-            console.log(sateSubscription[0].subscriber_id)
             if (sateSubscription[0].subscriber_id === null) {
                 // Если у пользователя нет подписки, создаем запись в таблице Subscriber и обновляем User.
                 const subscriptionTableInfo = await this.db.connect('INSERT INTO `Subscriber`(`start_subscription`, `end_subscription`) VALUES (?, ?)', [
@@ -107,21 +106,4 @@ export class User {
     }   
 }
 
-
-let user = new User()
-// user.registration(1234, 'Auf', 20).then(res => {
-//     console.log(res)
-// })
-
-user.makeSubscription(2352345, 1).then(res => {
-    console.log(res)
-})
-
-// user.authentication(129385234).then(res => {
-//     console.log(res)
-// })
-
-// user.isSubscriber(9999000).then(res => {
-//     console.log(res)
-// })
 

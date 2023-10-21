@@ -13,7 +13,7 @@ export class InitializeDatabase {
         });
     }
 
-    connect(sqlQuery: string, sqlParams?: string[]): Promise<any> {
+    connect(sqlQuery: string, sqlParams?: (string | number | null)[]): Promise<any> {
         return new Promise((resolve, reject) => {
             this.pool.promise().execute(sqlQuery, sqlParams)
                 .then(([rows]) => {
@@ -25,6 +25,4 @@ export class InitializeDatabase {
         });
     }
 }
-
-
 
