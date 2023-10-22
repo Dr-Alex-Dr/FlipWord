@@ -1,4 +1,4 @@
-import { InitializeDatabase } from "./InitializeDatabase.js";
+import { InitializeDatabase } from "../InitializeDatabase.js";
 import moment from "moment";
 
 
@@ -9,19 +9,16 @@ export class User {
         this.db = new InitializeDatabase()
     }
 
-    async registration(telegramId: number, user_name: string | null, durationSubscription: number): Promise<boolean> {
+    async registration(telegramId: number, user_name: string | null, durationSubscription: number): Promise<void> {
         try {
             await this.db.connect('INSERT INTO `User`(`telegram_id`, `name`) VALUES (?, ?)', [
                 telegramId,
                 user_name
             ]);
             await this.makeSubscription(telegramId, durationSubscription);
-
-            return true;
         }
         catch(err) {
             console.log('Ошибка регистрации ' + err)
-            return false;
         }
     }
 
@@ -43,12 +40,12 @@ export class User {
     async isSubscriber(telegramId: number): Promise<boolean> {
         try {
             const subscribtionInfo = await this.db.connect(`
-            SELECT start_subscription, end_subscription 
+            SELECT Subscriber.end_subscription, Subscriber.start_subscription 
             FROM User
-            JOIN Subscriber ON User.subscriber_id=Subscriber.id
+            LEFT JOIN Subscriber ON User.id = Subscriber.user_id
             WHERE User.telegram_id = ?`, [telegramId])
 
-            if (subscribtionInfo.length === 0 || subscribtionInfo[0].start_subscription === null || subscribtionInfo[0].end_subscription === null) {
+            if (subscribtionInfo[0].start_subscription === null || subscribtionInfo[0].end_subscription === null) {
                 return false;
             }
 
@@ -68,40 +65,38 @@ export class User {
         }
     }
 
-    async makeSubscription(telegramId: number, durationSubscription: number): Promise<boolean> {
+    async makeSubscription(telegramId: number, durationSubscription: number): Promise<void> {
         const currentDate = moment().format('YYYY-MM-DD')
         const endSubscription = moment().add(durationSubscription, 'months').format('YYYY-MM-DD')
 
         try {
-            let sateSubscription  = await this.db.connect('SELECT * FROM User WHERE `telegram_id` = ?', [telegramId])
+            let sateSubscription = await this.db.connect(`
+                SELECT User.id, Subscriber.user_id 
+                FROM User
+                LEFT JOIN Subscriber ON User.id = Subscriber.user_id
+                WHERE User.telegram_id = ?`, [telegramId])
 
-            if (sateSubscription[0].subscriber_id === null) {
-                // Если у пользователя нет подписки, создаем запись в таблице Subscriber и обновляем User.
-                const subscriptionTableInfo = await this.db.connect('INSERT INTO `Subscriber`(`start_subscription`, `end_subscription`) VALUES (?, ?)', [
+            if (sateSubscription[0].user_id === null) {
+                // Если у пользователя нет подписки, создаем запись в таблице Subscriber 
+                await this.db.connect('INSERT INTO `Subscriber`(`start_subscription`, `end_subscription`, `user_id`) VALUES (?, ?, ?)', [
                     currentDate,
-                    endSubscription
+                    endSubscription,
+                    sateSubscription[0].id
                 ])
-                await this.db.connect(`UPDATE User SET subscriber_id = ? WHERE telegram_id = ?`, [
-                    subscriptionTableInfo.insertId, 
-                    telegramId
-                ]) 
-
-                return true;
             }
             else {
                 // Если у пользователя уже есть подписка, просто обновляем subscriber_id.
-                await this.db.connect(`UPDATE Subscriber SET start_subscription = ?, end_subscription = ? WHERE id = ?`, [
+                await this.db.connect(`UPDATE Subscriber SET start_subscription = ?, end_subscription = ? WHERE user_id = ?`, [
                     currentDate,
                     endSubscription,
-                    sateSubscription[0].subscriber_id, 
+                    sateSubscription[0].id 
                 ]) 
 
-                return true;
+
             }          
         }   
         catch(err) {
             console.log('Ошибка оформления подписки ' + err)
-            return false;
         }      
     }   
 }
