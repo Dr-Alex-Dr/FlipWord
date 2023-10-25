@@ -9,11 +9,11 @@ export class User {
         this.db = new InitializeDatabase()
     }
 
-    async registration(telegramId: number, user_name: string | null, durationSubscription: number): Promise<void> {
+    async registration(telegramId: number, userName: string | null, durationSubscription: number): Promise<void> {
         try {
             await this.db.connect('INSERT INTO `User`(`telegram_id`, `name`) VALUES (?, ?)', [
                 telegramId,
-                user_name
+                userName
             ]);
             await this.makeSubscription(telegramId, durationSubscription);
         }

@@ -33,7 +33,7 @@ export class Word {
 
             this.addWordInCollection(wordTableInfo.insertId, collectionId);
 
-            this.generateAudio(translateWord.word, wordTableInfo.insertId)
+            // this.generateAudio(translateWord.word, wordTableInfo.insertId)
         }   
         catch(err) {
             console.log('createWord error ' + err)
@@ -67,7 +67,7 @@ export class Word {
     }
 
 
-    public async addWordInCollection(wordId: number, collectionId: number): Promise<void> {
+    private async addWordInCollection(wordId: number, collectionId: number): Promise<void> {
         try {
             await this.db.connect('INSERT INTO `Word_in_collection`(`collection_id`, `word_id`) VALUES (?, ?)', [
                 collectionId,
@@ -79,7 +79,7 @@ export class Word {
         }
     }
 
-    public async generateAudio(word: string, wordId: number) {
+    private async generateAudio(word: string, wordId: number) {
         try {
             const params = new URLSearchParams({
                 'text': word,

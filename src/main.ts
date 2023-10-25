@@ -1,42 +1,27 @@
-import { User } from "./Controllers/User.js";
-import { Collection } from "./Controllers/Collection.js";
+import express, { Express } from 'express';
+import { router } from './routes.js';
+import { TelegramBot } from './Services/TelegramBot.js';
+import 'dotenv/config';
 
-// // let user = new User()
-let collection = new Collection()
+class App {
+    private expressApp: Express;
 
-collection.generateAudio('ТЫ мой герой раздевайся я уже жду тебя', 1)
+    constructor() {
+        this.expressApp = express();
+        this.expressApp.use(express.json());
 
-// collection.getWordTranslations('book').then(res => {
-//     console.log(res)
-// })
+        this.setupRoutes();
+    }
 
-// let words = [
-//     {
-//         word: 'bagel',
-//         translations: 'рогалик'
-//     },
-//     {
-//         word: 'bagel',
-//         translations: 'бублик'
-//     }
-// ]
+    private setupRoutes() {
+        this.expressApp.use('/', router);
 
+        this.expressApp.listen(3000, 'localhost', () => {
+            console.log('Сервер запущен на порту 3000');
+        });
+    }
+}
 
-// collection.createCollection(123456789, 'Words from the Internet', words, '#ffffff')
-// collection.editCollection(20, 'old name')
-// collection.deleteWord(37)
-
-// collection.deleteCollection(19)
-//user.registration(123456789, 'Alex', 2)
-// user.authentication(123456789).then(res => {
-//     console.log(res)
-// })
-// user.isSubscriber(123456789).then(res => {
-//     console.log(res)
-// })
-// user.makeSubscription(123456789, 4)
-// user.isSubscriber(123456789).then(res => {
-//     console.log(res)
-// })
-
-
+const app = new App();
+let bot = new TelegramBot()
+bot.start()

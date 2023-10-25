@@ -1,5 +1,5 @@
 import mysql, { Pool } from 'mysql2';
-import 'dotenv/config'
+import 'dotenv/config';
 
 export class InitializeDatabase {
     private pool: Pool;
