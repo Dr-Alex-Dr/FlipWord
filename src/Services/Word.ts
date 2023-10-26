@@ -33,7 +33,7 @@ export class Word {
 
             this.addWordInCollection(wordTableInfo.insertId, collectionId);
 
-            // this.generateAudio(translateWord.word, wordTableInfo.insertId)
+            this.generateAudio(translateWord.word)
         }   
         catch(err) {
             console.log('createWord error ' + err)
@@ -79,29 +79,33 @@ export class Word {
         }
     }
 
-    private async generateAudio(word: string, wordId: number) {
+    private async generateAudio(word: string) {
         try {
-            const params = new URLSearchParams({
-                'text': word,
-                'lang': 'ru-RU',
-                'voice': 'jane',
-                'format': 'mp3',
-                'emotion': 'good',
-                'speed': '0.8'
-            });
-    
-            const result = await axios({
-                method: 'POST',
-                url: 'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize',
-                headers: {
-                'Authorization': 'Api-Key ' + process.env.YandexSpeechkitToken,
-                'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                data: params,
-                responseType: 'stream',
-            });
+            let wordInDb = await this.db.connect('SELECT `word` FROM `Word` WHERE `word` = ?', ['dfdf'])
+
+            if (wordInDb.length === 0) {
+                const params = new URLSearchParams({
+                    'text': word,
+                    'lang': 'en-US',
+                    'voice': 'john',
+                    'format': 'mp3',
+                    'speed': '0.8'
+                });
+        
+                const result = await axios({
+                    method: 'POST',
+                    url: 'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize',
+                    headers: {
+                    'Authorization': 'Api-Key ' + process.env.YandexSpeechkitToken,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: params,
+                    responseType: 'stream',
+                });
+                
+                result.data.pipe(fs.createWriteStream(`./src/media/${word}.mp3`));
+            }
             
-            result.data.pipe(fs.createWriteStream(`./src/media/${wordId}.mp3`));
         }
         catch(err) {
             console.log('generateAudio error ' + err)

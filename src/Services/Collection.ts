@@ -1,5 +1,5 @@
-import { Word } from "../Controllers/Word.js";
-import { WordWithTranslation } from "../Controllers/Word.js"
+import { Word } from "./Word.js";
+import { WordWithTranslation } from "./Word.js"
 
 
 export class Collection extends Word {
@@ -7,7 +7,7 @@ export class Collection extends Word {
         super()
     }
 
-    async createCollection(telegramId: number, name: string, words: WordWithTranslation[], color: string): Promise<void> {
+    async createCollection(telegramId: number, name: string, words: WordWithTranslation[] | null, color: string): Promise<void> {
         try {
             const [userId] = await this.db.connect('SELECT id FROM User WHERE telegram_id = ?', [telegramId])
             
@@ -17,9 +17,11 @@ export class Collection extends Word {
                 userId.id,
             ]);
 
-            for (let word of words) {
-                this.createWord(telegramId, collectionInfo.insertId, word);
-            }  
+            if (words !== null) {
+                for (let word of words) {
+                    this.createWord(telegramId, collectionInfo.insertId, word);
+                } 
+            } 
         }   
         catch(err) {
             console.log('addCollection error ' + err)

@@ -25,3 +25,18 @@ class App {
 const app = new App();
 let bot = new TelegramBot()
 bot.start()
+
+
+// import { Collection } from './Services/Collection.js';
+
+// let collecton = new Collection()
+// // collecton.createCollection(968615914, 'animal', null, '#ccc')
+
+// collecton.getWordTranslations('island').then(res => {
+//     let word = {
+//         word: res?.word ?? '',
+//         translations: res?.translations[0] ?? ''
+//     }
+//     collecton.createWord(968615914, 46, word)
+//     console.log(res)
+// })
