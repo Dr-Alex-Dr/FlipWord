@@ -27,12 +27,12 @@ let bot = new TelegramBot()
 bot.start()
 
 
-// import { Collection } from './Services/Collection.js';
+import { Collection } from './Services/Collection.js';
 
 // let collecton = new Collection()
 // // collecton.createCollection(968615914, 'animal', null, '#ccc')
 
-// collecton.getWordTranslations('island').then(res => {
+// collecton.getWordTranslations('head').then(res => {
 //     let word = {
 //         word: res?.word ?? '',
 //         translations: res?.translations[0] ?? ''

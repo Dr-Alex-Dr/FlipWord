@@ -103,7 +103,7 @@ export class Word {
                     responseType: 'stream',
                 });
                 
-                result.data.pipe(fs.createWriteStream(`./src/media/${word}.mp3`));
+                result.data.pipe(fs.createWriteStream(`./src/media/${word}.ogg`));
             }
             
         }

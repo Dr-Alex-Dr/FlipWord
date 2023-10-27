@@ -17,7 +17,7 @@ export class TelegramBot {
     private configureBot() {
         this.bot.start(this.handleStart);
         this.bot.use(handleUserIsSubscriber)
-        this.bot.on('text', (ctx: Context) => { this.editMessage(ctx) })
+        this.bot.on('text', (ctx: Context) => { this.task.generateTask(968615914, 46, ctx) })
     }
 
     private async handleStart(ctx: Context, next: () => void) {

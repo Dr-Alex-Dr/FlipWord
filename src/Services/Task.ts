@@ -23,12 +23,16 @@ export class Task {
         return resultStr.join('')
     }
 
-    public generateTask(telegramId: number, collectionId: number) {
+    public generateTask(telegramId: number, collectionId: number, ctx: Context) {
 
+        let word = 'head';
+
+        this.visualizationTask(ctx, word);
     }
 
-    public visualizationTask(ctx: Context) {
+    public visualizationTask(ctx: Context, word: string) {
         ctx.reply(this.generateIndecator(40, 0));
+        ctx.replyWithAudio({ source: `./src/media/${word}.ogg`});
     }
 }
 
