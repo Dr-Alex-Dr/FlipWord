@@ -27,16 +27,35 @@ let bot = new TelegramBot()
 bot.start()
 
 
-import { Collection } from './Services/Collection.js';
 
-// let collecton = new Collection()
-// // collecton.createCollection(968615914, 'animal', null, '#ccc')
+// import { Word } from "./Services/Word.js";
 
-// collecton.getWordTranslations('head').then(res => {
-//     let word = {
-//         word: res?.word ?? '',
-//         translations: res?.translations[0] ?? ''
-//     }
-//     collecton.createWord(968615914, 46, word)
-//     console.log(res)
+// let word = new Word()
+// word.createWord(968615914, 2, {
+//     word: 'dog', 
+//     translations: 'собака'
 // })
+// word.createWord(968615914, 2, {
+//     word: 'house', 
+//     translations: 'дом'
+// })
+// word.createWord(968615914, 2, {
+//     word: 'three', 
+//     translations: 'три'
+// })
+// word.createWord(968615914, 2, {
+//     word: 'underground', 
+//     translations: 'метро'
+// })  
+// word.createWord(968615914, 2, {
+//     word: 'Christmas tree', 
+//     translations: 'елка'
+// })  
+// word.createWord(968615914, 2, {
+//     word: 'laptop', 
+//     translations: 'ноутбук'
+// })  
+// word.createWord(968615914, 2, {
+//     word: 'print', 
+//     translations: 'печать'
+// })  

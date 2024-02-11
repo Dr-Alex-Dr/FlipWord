@@ -24,11 +24,10 @@ export class Word {
         try {
             const [userId] = await this.db.connect('SELECT id FROM User WHERE telegram_id = ?', [telegramId])
 
-            let wordTableInfo = await this.db.connect('INSERT INTO `Word`(`user_id`, `word`, `translation`, `frequency`) VALUES (?, ?, ?, ?)', [
+            let wordTableInfo = await this.db.connect('INSERT INTO `Word`(`user_id`, `word`, `translation`) VALUES (?, ?, ?)', [
                 userId.id,
                 translateWord.word,
-                translateWord.translations,
-                1
+                translateWord.translations
             ]);
 
             this.addWordInCollection(wordTableInfo.insertId, collectionId);
